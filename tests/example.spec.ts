@@ -24,25 +24,25 @@ test.describe('Todo App Basic Functionality', () => {
     await expect(page.locator('ol > li')).not.toContainText(['Temp task']);
   });
 
- test('should move tasks up and down', async ({ page }) => {
-  await page.goto('http://localhost:5173/');
+  test('should move tasks up and down', async ({ page }) => {
+    await page.goto('http://localhost:5173/');
 
-  // Select items by index
-  const firstItem = page.locator('ol > li').nth(0);
-  const secondItem = page.locator('ol > li').nth(1);
+    // Select items by index
+    const firstItem = page.locator('ol > li').nth(0);
+    const secondItem = page.locator('ol > li').nth(1);
 
-  // Move second item UP (☝️)
-  await secondItem.getByRole('button', { name: 'Up' }).click();
+    // Move second item UP (☝️)
+    await secondItem.getByRole('button', { name: 'Up' }).click();
 
-  // After moving up → second item should now be first
-  const newFirst = page.locator('ol > li').nth(0);
-  await expect(newFirst.locator('.text')).toHaveText(/Eat breakfast|Do cp|Take a shower/);
+    // After moving up → second item should now be first
+    const newFirst = page.locator('ol > li').nth(0);
+    await expect(newFirst.locator('.text')).toHaveText(/Eat breakfast|Do cp|Take a shower/);
 
-  // Move the item DOWN (👇)
-  await newFirst.getByRole('button', { name: 'Down' }).click();
+    // Move the item DOWN (👇)
+    await newFirst.getByRole('button', { name: 'Down' }).click();
 
-  const newSecond = page.locator('ol > li').nth(1);
-  await expect(newSecond.locator('.text')).toHaveText(/Eat breakfast|Do cp|Take a shower/);
-});
+    const newSecond = page.locator('ol > li').nth(1);
+    await expect(newSecond.locator('.text')).toHaveText(/Eat breakfast|Do cp|Take a shower/);
+  });
 
 });
