@@ -20,21 +20,6 @@ By offloading the git operations and file generation into an isolated Docker con
 
 ---
 
-## 🏗️ System Architecture
-
-```mermaid
-graph TD
-    A[React Frontend<br/>App.jsx] -->|POST /api/run JSON Payload| B(FastAPI Server<br/>api.py)
-    B -.->|Reads env vars| C[config.py]
-    B -->|URL, Token, Test Code| D{Payload Generator<br/>payload_generator.py}
-    D -->|Returns injected Bash Script| B
-    B -->|Script + Token| E[Docker Runner<br/>docker_runner.py]
-    E -->|docker.from_env| F[(Ephemeral Alpine Container<br/>Docker VM)]
-    F -->|git clone, inject, commit, push| G((Target GitHub Repo))
-    F -.->|Streams live logs| E
-    E -.->|Returns logs to UI| A
-```
-
 ## 🛠️ Tech Stack
 
 **Backend:**
@@ -76,29 +61,26 @@ python -m venv venv
 
 pip install -r requirements.txt
 python api.py
-
+```
 The backend will start on http://localhost:8000.
 
 2. Frontend Setup
 Open a new terminal window, navigate to the frontend directory, and start the Vite development server.
 
-Bash
+```bash
 cd frontend
 npm install
 npm run dev
+```
 The UI will be accessible at http://localhost:5173.
 
-💡 Usage
-Open http://localhost:5173 in your browser.
-
-Enter the target Repository URL (e.g., https://github.com/owner/repo).
-
-Securely provide a GitHub Personal Access Token (PAT) with repo scope.
-
-(Optional) Upload a .txt file containing your custom Playwright test suite, or use the default bundled tests.
-
-Click Run Workflow and watch the live logs as the Docker container injects your pipeline!
+How to use?
+1. Open http://localhost:5173 in your browser.
+2. Enter the target Repository URL (e.g., https://github.com/owner/repo).
+3. Securely provide a GitHub Personal Access Token (PAT) with repo scope.
+4. (Optional) Upload a .txt file containing your custom Playwright test suite, or use the default bundled tests.
+5. Click Run Workflow and watch the live logs as the Docker container injects your pipeline!
 
 ⚠️ Security Note
 Your GitHub Personal Access Token is never stored on the server or logged to the console. It is passed securely to the Docker container as an environment variable, and the container automatically strips it from the local git config before performing any commits.
-```
+
