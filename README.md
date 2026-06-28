@@ -5,9 +5,6 @@
 ![Docker](https://img.shields.io/badge/docker-required-2496ED)
 
 An automated CI/CD orchestration platform that eliminates pipeline setup friction. This full-stack tool allows developers to instantly inject a customized Playwright testing suite and a GitHub Actions deployment pipeline into any repository with a single click.
-
-By offloading the git operations and file generation into an isolated Docker container, AstraCI achieves an **85% reduction in setup time** for cross-repository validation while maintaining strict security boundaries.
-
 ---
 
 ## ✨ Key Features
