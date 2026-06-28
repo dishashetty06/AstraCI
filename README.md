@@ -1,4 +1,4 @@
-# 🚀 CI/CD Orchestrator
+# 🚀 AstraCI : Cross-repository CI/CD Orchestrator
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Node](https://img.shields.io/badge/node-22.x-green)
@@ -81,6 +81,6 @@ How to use?
 4. (Optional) Upload a .txt file containing your custom Playwright test suite, or use the default bundled tests.
 5. Click Run Workflow and watch the live logs as the Docker container injects your pipeline!
 
-⚠️ Security Note
+⚠️ Security Note: 
 Your GitHub Personal Access Token is never stored on the server or logged to the console. It is passed securely to the Docker container as an environment variable, and the container automatically strips it from the local git config before performing any commits.
 
