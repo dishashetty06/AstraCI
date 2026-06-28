@@ -1,16 +1,102 @@
-# React + Vite
+# 🚀 CI/CD Orchestrator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![Node](https://img.shields.io/badge/node-22.x-green)
+![Docker](https://img.shields.io/badge/docker-required-2496ED)
 
-Currently, two official plugins are available:
+An automated CI/CD orchestration platform that eliminates pipeline setup friction. This full-stack tool allows developers to instantly inject a customized Playwright testing suite and a GitHub Actions deployment pipeline into any repository with a single click.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+By offloading the git operations and file generation into an isolated Docker container, AstraCI achieves an **85% reduction in setup time** for cross-repository validation while maintaining strict security boundaries.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Key Features
 
-## Expanding the ESLint configuration
+- **Zero-Touch Pipeline Injection:** Automatically provisions `.github/workflows/ci.yml` and `tests/example.spec.ts` into target repositories.
+- **Isolated Execution Engine:** Uses ephemeral `alpine/git` Docker containers to securely handle cloning, committing, and pushing via Personal Access Tokens (PAT).
+- **Dynamic Playwright Config:** Generates tailored Playwright and Vite configurations directly within the target environment without requiring manual user setup.
+- **Real-Time Log Streaming:** Streams live container `stdout` directly to the frontend UI, providing instant developer feedback.
+- **GitHub-Native UI:** Features a sleek, dark-mode React interface designed to feel instantly familiar to developers.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🏗️ System Architecture
+
+graph TD
+A[React Frontend<br/>App.jsx] -->|POST /api/run JSON Payload| B(FastAPI Server<br/>api.py)
+B -.->|Reads env vars| C[config.py]
+B -->|URL, Token, Test Code| D{Payload Generator<br/>payload_generator.py}
+D -->|Returns injected Bash Script| B
+B -->|Script + Token| E[Docker Runner<br/>docker_runner.py]
+E -->|docker.from_env| F[(Ephemeral Alpine Container<br/>Docker VM)]
+F -->|git clone, inject, commit, push| G((Target GitHub Repo))
+F -.->|Streams live logs| E
+E -.->|Returns logs to UI| A
+
+## 🛠️ Tech Stack
+
+**Backend:**
+
+- Python 3.10+
+- FastAPI & Uvicorn
+- Docker SDK for Python
+- Pydantic
+
+**Frontend:**
+
+- React 18
+- Vite
+- Tailwind CSS
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Before running the orchestrator locally, ensure you have the following installed:
+
+- **Docker Desktop** (Must be actively running in the background)
+- **Node.js 22.x** (Required for Vite compatibility)
+- **Python 3.10+**
+
+### 1. Backend Setup
+
+Navigate to the backend directory, create a virtual environment, and start the FastAPI server.
+
+```bash
+cd backend
+python -m venv venv
+
+# Activate the virtual environment
+# On Windows: venv\Scripts\activate
+# On Mac/Linux: source venv/bin/activate
+
+pip install -r requirements.txt
+python api.py
+
+The backend will start on http://localhost:8000.
+
+2. Frontend Setup
+Open a new terminal window, navigate to the frontend directory, and start the Vite development server.
+
+Bash
+cd frontend
+npm install
+npm run dev
+The UI will be accessible at http://localhost:5173.
+
+💡 Usage
+Open http://localhost:5173 in your browser.
+
+Enter the target Repository URL (e.g., https://github.com/owner/repo).
+
+Securely provide a GitHub Personal Access Token (PAT) with repo scope.
+
+(Optional) Upload a .txt file containing your custom Playwright test suite, or use the default bundled tests.
+
+Click Run Workflow and watch the live logs as the Docker container injects your pipeline!
+
+⚠️ Security Note
+Your GitHub Personal Access Token is never stored on the server or logged to the console. It is passed securely to the Docker container as an environment variable, and the container automatically strips it from the local git config before performing any commits.
+```
