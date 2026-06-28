@@ -22,16 +22,18 @@ By offloading the git operations and file generation into an isolated Docker con
 
 ## 🏗️ System Architecture
 
+```mermaid
 graph TD
-A[React Frontend<br/>App.jsx] -->|POST /api/run JSON Payload| B(FastAPI Server<br/>api.py)
-B -.->|Reads env vars| C[config.py]
-B -->|URL, Token, Test Code| D{Payload Generator<br/>payload_generator.py}
-D -->|Returns injected Bash Script| B
-B -->|Script + Token| E[Docker Runner<br/>docker_runner.py]
-E -->|docker.from_env| F[(Ephemeral Alpine Container<br/>Docker VM)]
-F -->|git clone, inject, commit, push| G((Target GitHub Repo))
-F -.->|Streams live logs| E
-E -.->|Returns logs to UI| A
+    A[React Frontend<br/>App.jsx] -->|POST /api/run JSON Payload| B(FastAPI Server<br/>api.py)
+    B -.->|Reads env vars| C[config.py]
+    B -->|URL, Token, Test Code| D{Payload Generator<br/>payload_generator.py}
+    D -->|Returns injected Bash Script| B
+    B -->|Script + Token| E[Docker Runner<br/>docker_runner.py]
+    E -->|docker.from_env| F[(Ephemeral Alpine Container<br/>Docker VM)]
+    F -->|git clone, inject, commit, push| G((Target GitHub Repo))
+    F -.->|Streams live logs| E
+    E -.->|Returns logs to UI| A
+```
 
 ## 🛠️ Tech Stack
 
