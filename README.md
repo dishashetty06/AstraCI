@@ -5,6 +5,7 @@
 ![Docker](https://img.shields.io/badge/docker-required-2496ED)
 
 An automated CI/CD orchestration platform that eliminates pipeline setup friction. This full-stack tool allows developers to instantly inject a customized Playwright testing suite and a GitHub Actions deployment pipeline into any repository with a single click.
+
 ---
 
 ## ✨ Key Features
